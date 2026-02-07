@@ -35,7 +35,7 @@ def clarke_error_grid(ref_values, pred_values, title):
     return plt
 
 def explain_with_shap(model, X_train, X_test, feature_names):
-    """Sử dụng SHAP để giải thích mô hình (Tree-based)"""
+    # Sử dụng SHAP để giải thích mô hình (Tree-based)
     explainer = shap.Explainer(model, X_train)
     shap_values = explainer(X_test)
     

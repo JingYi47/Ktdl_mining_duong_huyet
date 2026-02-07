@@ -10,7 +10,7 @@ class DataPreprocessor:
         self.imputer = KNNImputer(n_neighbors=5)
         
     def handle_missing_values(self, df, column='Glucose'):
-        """Xử lý giá trị thiếu bằng KNN hoặc Interpolation"""
+        # Xử lý giá trị thiếu bằng KNN hoặc Interpolation
         if self.method == 'knn':
             # KNN cần dữ liệu dạng mảng 2D
             df[[column]] = self.imputer.fit_transform(df[[column]])
@@ -19,14 +19,14 @@ class DataPreprocessor:
         return df
 
     def apply_moving_average(self, df, column='Glucose', window=4):
-        """Làm mượt dữ liệu bằng Moving Average"""
+        # Làm mượt dữ liệu bằng Moving Average
         df[f'{column}_Smooth'] = df.groupby('PatientID')[column].transform(
             lambda x: x.rolling(window=window, min_periods=1, center=True).mean()
         )
         return df
 
     def feature_engineering(self, df, column='Glucose'):
-        """Xây dựng Lag features và Rolling windows"""
+        # Xây dựng Lag features và Rolling windows
         # Lag features
         for i in [1, 2, 4]: # 1 step, 2 steps, 1 day (4 steps)
             df[f'{column}_Lag_{i}'] = df.groupby('PatientID')[column].shift(i)

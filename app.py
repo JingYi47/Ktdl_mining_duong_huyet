@@ -10,7 +10,7 @@ from prediction_models import PredictionModule
 from evaluation import clarke_error_grid, explain_with_shap
 from sklearn.model_selection import train_test_split
 
-# --- PAGE CONFIG ---
+# PAGE CONFIG 
 st.set_page_config(
     page_title="Diabetes Insight AI | Nhóm 10",
     page_icon="🩸",
@@ -18,7 +18,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- CUSTOM CSS FOR PREMIUM LOOK ---
+# CSS FOR PREMIUM LOOK
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
@@ -78,7 +78,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- HEADER SECTION ---
+# HEADER SECTION
 st.markdown("""
     <div class="header-box">
         <h1 style='margin:0; font-size: 2.5rem;'>🚀 Diabetes Insight AI Portal</h1>
@@ -86,7 +86,7 @@ st.markdown("""
     </div>
     """, unsafe_allow_html=True)
 
-# --- SIDEBAR CONFIG ---
+# SIDEBAR
 with st.sidebar:
     st.image("https://cdn-icons-png.flaticon.com/512/3063/3063822.png", width=100)
     st.title("🎛️ Control Panel")
@@ -105,7 +105,7 @@ with st.sidebar:
             df = pd.read_csv(uploaded_file, nrows=sample_size)
             st.sidebar.info(f"⚡ Đã nạp {len(df):,} dòng đầu tiên để xử lý nhanh.")
             
-            # 1. Tự động xử lý Timestamp nếu có cột Date & Time
+            #Tự động xử lý Timestamp nếu có cột Date & Time
             if 'Date' in df.columns and 'Time' in df.columns:
                 df['Timestamp'] = pd.to_datetime(df['Date'] + ' ' + df['Time'])
                 st.sidebar.info("📅 Đã gộp Date & Time thành Timestamp")
@@ -114,7 +114,7 @@ with st.sidebar:
                 df['Timestamp'] = pd.date_range(start='2025-01-01', periods=len(df), freq='5min')
                 st.sidebar.warning("⚠️ Không tìm thấy cột thời gian, đã tạo giả lập")
 
-            # 2. Tự động phát hiện cột Glucose (Ví dụ: CGM, BG, Sensor Glucose (mg/dL))
+            #Tự động phát hiện cột Glucose (Ví dụ: CGM, BG, Sensor Glucose (mg/dL))
             possible_names = ['Glucose', 'CGM', 'BG', 'GlucoseValue', 'Value', 'Sensor Glucose (mg/dL)']
             found_glucose = False
             for col in df.columns:
@@ -128,7 +128,7 @@ with st.sidebar:
                 st.error("❌ Không tìm thấy cột Glucose")
                 st.stop()
 
-            # 3. Xử lý PatientID nếu thiếu
+            #Xử lý PatientID nếu thiếu
             if 'PatientID' not in df.columns:
                 df['PatientID'] = 'Patient_001'
                 st.sidebar.info("👤 Đã gán nhãn Patient_001 cho toàn bộ dữ liệu")
@@ -159,7 +159,7 @@ with st.sidebar:
     
     st.info("💡 Tip: Sử dụng tab 'Đánh giá & XAI' để giải thích kết quả AI.")
 
-# --- PROCESSING ---
+#PROCESSING
 preprocessor = DataPreprocessor()
 
 # Global Configuration for Analysis
@@ -177,7 +177,7 @@ if df_final.empty:
     st.error("❌ Dữ liệu sau khi xử lý bị trống. Có thể do file quá ngắn hoặc quá nhiều giá trị lỗi. Vui lòng thử dùng Dữ liệu giả lập để kiểm tra Dashboard.")
     st.stop()
 
-# --- MAIN TABS LAYOUT ---
+#MAIN TABS LAYOUT
 tab1, tab2, tab3, tab4 = st.tabs([
     "📂 Tiền xử lý Dữ liệu", 
     "🧩 Phân cụm (Unsupervised)", 
@@ -185,11 +185,11 @@ tab1, tab2, tab3, tab4 = st.tabs([
     "🛡️ Phân tích rủi ro & XAI"
 ])
 
-# --- TAB 1: PREPROCESSING ---
+#TAB 1:PREPROCESSING
 with tab1:
     st.subheader("🛠️ Phân tích & Tiền xử lý Dữ liệu Chi tiết")
     
-    # --- Data Insights Cards ---
+    #Data Insights Cards
     col_stat1, col_stat2, col_stat3, col_stat4 = st.columns(4)
     with col_stat1:
         st.metric("Tổng số mẫu", f"{len(df):,}")
@@ -203,7 +203,7 @@ with tab1:
 
     st.divider()
 
-    # --- Statistics & Quality ---
+    #Statistics & Quality
     col_ins1, col_ins2 = st.columns([1, 1])
     with col_ins1:
         st.markdown("### 📊 Thống kê mô tả (Descriptive Statistics)")
@@ -218,7 +218,7 @@ with tab1:
 
     st.divider()
 
-    # --- Data Comparison ---
+    #Data Comparison
     st.markdown("### 🔄 So sánh Dữ liệu trước và sau Tiền xử lý")
     col_data1, col_data2 = st.columns([1, 1])
     with col_data1:
@@ -252,7 +252,7 @@ with tab1:
     fig_corr.update_layout(template="plotly_dark")
     st.plotly_chart(fig_corr, use_container_width=True)
 
-# --- TAB 2: CLUSTERING ---
+#TAB 2: CLUSTERING
 with tab2:
     st.subheader("🧩 Phân nhóm bệnh nhân thông minh")
     cl_col1, cl_col2 = st.columns([1, 2])
@@ -262,9 +262,11 @@ with tab2:
     cm = ClusteringModule(X_cl)
 
     with cl_col1:
-        st.markdown("""
-        Tại giai đoạn này, hệ thống sẽ tự động tìm kiếm các đặc điểm chung của bệnh nhân để phân loại vào các nhóm bệnh lý khác nhau.
-        """)
+        st.markdown(
+        
+        # Tại giai đoạn này, hệ thống sẽ tự động tìm kiếm các đặc điểm chung của bệnh nhân để phân loại vào các nhóm bệnh lý khác nhau.
+      
+        )
         algo = st.selectbox("Thuật toán phân cụm", ["K-Means", "Hierarchical", "DBSCAN", "GMM", "Mean Shift"])
         n_clusters = st.slider("Số lượng cụm mục tiêu", 2, 6, 3)
         
@@ -282,7 +284,7 @@ with tab2:
                            title=f"Bản đồ phân cụm không gian 2D (Sử dụng {algo})")
         st.plotly_chart(fig_pca, use_container_width=True)
 
-# --- TAB 3: PREDICTION ---
+# TAB 3: PREDICTION
 with tab3:
     st.subheader("📈 Dự báo đường huyết tương lai")
     
@@ -345,7 +347,7 @@ with tab3:
         csv = res_df.to_csv(index=False).encode('utf-8')
         st.download_button("📥 Tải báo cáo CSV", data=csv, file_name='ai_predictions.csv', use_container_width=True)
 
-# --- TAB 4: EVALUATION & XAI ---
+#TAB 4: EVALUATION & XAI
 with tab4:
     st.subheader("🛡️ Phân tích rủi ro & Tính giải thích AI (XAI)")
     
@@ -384,7 +386,9 @@ with tab4:
                                      columns=features_pr)
             
             # Sử dụng mô hình tốt nhất (thường là XGBoost hoặc Random Forest)
-            best_model_name = metrics.iloc[0]['Model']
+            
+            best_model_name = perf_df.iloc[0]['Model']
+
             prediction = pm.models[best_model_name].predict(input_data)[0]
             
             st.code(f"Mô hình phối hợp tốt nhất ({best_model_name}) dự báo chỉ số tiếp theo là: {prediction:.2f} mg/dL", language="python")
@@ -393,6 +397,6 @@ with tab4:
             elif prediction < 70: st.error("🚨 Cảnh báo: Nguy cơ tụt đường huyết!")
             else: st.success("✅ Chỉ số dự báo nằm trong ngưỡng an toàn.")
 
-# --- FOOTER ---
+#FOOTER
 st.markdown("---")
 st.markdown("<p style='text-align: center; color: #666;'>Đồ án Khai thác dữ liệu - Nhóm 10 | 2025</p>", unsafe_allow_html=True)
